@@ -10,11 +10,9 @@ import com.actiontech.dble.backend.mysql.ByteUtil;
 import com.actiontech.dble.backend.mysql.PreparedStatement;
 import com.actiontech.dble.config.ErrorCode;
 import com.actiontech.dble.config.Fields;
+import com.actiontech.dble.log.general.GeneralLogHelper;
 import com.actiontech.dble.net.handler.FrontendPrepareHandler;
-import com.actiontech.dble.net.mysql.ExecutePacket;
-import com.actiontech.dble.net.mysql.LongDataPacket;
-import com.actiontech.dble.net.mysql.OkPacket;
-import com.actiontech.dble.net.mysql.ResetPacket;
+import com.actiontech.dble.net.mysql.*;
 import com.actiontech.dble.server.response.PreparedStmtResponse;
 import com.actiontech.dble.services.mysqlsharding.ShardingService;
 import com.actiontech.dble.util.HexFormatUtil;
@@ -121,6 +119,7 @@ public class ServerPrepareHandler implements FrontendPrepareHandler {
             // reset the Parameter
             String sql = prepareStmtBindValue(pStmt, bindValues);
             service.getSession2().setPrepared(true);
+            GeneralLogHelper.putGLog(service, MySQLPacket.TO_STRING.get(data[4]), sql);
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("execute prepare sql: " + sql);
             }

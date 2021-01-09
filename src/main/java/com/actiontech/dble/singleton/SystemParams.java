@@ -11,6 +11,7 @@ import com.actiontech.dble.config.helper.KeyVariables;
 import com.actiontech.dble.config.model.ClusterConfig;
 import com.actiontech.dble.config.model.ParamInfo;
 import com.actiontech.dble.config.model.SystemConfig;
+import com.actiontech.dble.server.status.GeneralLog;
 import com.actiontech.dble.server.status.SlowQueryLog;
 
 import java.util.ArrayList;
@@ -24,12 +25,14 @@ public final class SystemParams {
     public static SystemParams getInstance() {
         return INSTANCE;
     }
+
     private List<ParamInfo> readOnlyParams = new ArrayList<>();
 
 
     public List<ParamInfo> getReadOnlyParams() {
         return readOnlyParams;
     }
+
     private SystemParams() {
 
         readOnlyParams.add(new ParamInfo("clusterEnable", ClusterConfig.getInstance().isClusterEnable() + "", "Whether enable the cluster mode"));
@@ -137,7 +140,10 @@ public final class SystemParams {
         params.add(new ParamInfo("flushSlowLogSize", SlowQueryLog.getInstance().getFlushSize() + "", "The max size for flushing log to disk, the default is 1000"));
         params.add(new ParamInfo("enableAlert", AlertUtil.isEnable() + "", "enable or disable alert"));
         params.add(new ParamInfo("capClientFoundRows", CapClientFoundRows.getInstance().isEnableCapClientFoundRows() + "", "Whether to turn on EOF_Packet to return found rows,The default value is false"));
-
+        params.add(new ParamInfo("enableGeneralLog", GeneralLog.getInstance().isEnableGeneralLog() + "", "Enable general log"));
+        params.add(new ParamInfo("generalLogFile", GeneralLog.getInstance().getGeneralLogFile(), "The path of general log,The default value is ./general/general.log"));
+        params.add(new ParamInfo("generalLogFileSize", GeneralLog.getInstance().getGeneralLogFileSize() + "M", "The max size of the general log file.The default value is 16M"));
+        params.add(new ParamInfo("generalLogQueueSize", GeneralLog.getInstance().getGeneralLogQueueSize() + "", "Sets the queue size for consuming general log, value must not be less than 1 and must be a power of 2,The default value is 4069"));
         return params;
     }
 }
