@@ -59,7 +59,7 @@
     <!-- 路由函数定义 -->
     <function name="func0" class="com.actiontech.dble.route.function.PartitionByLong">
         <property name="partitionCount">2</property>
-        <property name="partitionLength">512</property>
+        <property name="partitionLength">1</property>
     </function>
 
 

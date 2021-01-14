@@ -34,9 +34,9 @@
     -->
 
     <!-- 用户访问定义，用户名、密码、schema等信息。 -->
-    <user name="test">
-        <property name="password">test</property>
-        <property name="schemas">dbtest,mysqldb,cndb,TESTDB,dubbo,dubbo2,config,none_node_test,solo1,ignoreSchemaTest
+    <user name="root">
+        <property name="password">123456</property>
+        <property name="schemas">TESTDB
         </property>
     </user>
     <!--
