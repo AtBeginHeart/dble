@@ -1,0 +1,6 @@
+@startuml
+DbleStartup -> DbleStartup: ClusterController.init();
+DbleStartup --> DbleServer: getInstance()
+DbleServer --> DbleServer:beforeStart
+DbleServer --> DbleServer:startup()
+@enduml
