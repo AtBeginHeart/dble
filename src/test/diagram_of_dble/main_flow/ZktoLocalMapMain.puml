@@ -1,0 +1,5 @@
+@startuml
+ZktoLocalMapMain -> ZktoLocalMapMain:init() //在线扩容只读表配合工具
+box
+
+@enduml
