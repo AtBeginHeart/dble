@@ -1,0 +1,88 @@
+@startuml
+class FrontEndCommandTask{
+run()
+dowork()
+}
+
+
+class FrontendConnection {
+query(String sql, boolean isPrepared)
+this.setExecuteSql(sql,isPrepared)
+}
+
+class ServerQueryHandler {
+setReadOnly(UserReadOnly);
+setSessionReadOnly(sessionReadOnly)
+query(sql)
+}
+
+class SelectHandler{
+handle()
+}
+
+class ServerConnection
+{
+execute()
+routeEndExecuteSQL()
+}
+
+
+
+class NonBlockingSession{
+execute()
+}
+
+
+class SingleNodeHandler{
+connectionAcquired()
+execute()
+rowResponse()
+}
+
+class PhysicalDBNode{
+getConnection()
+}
+
+class PhysicalDBPool{
+getRWBalanceCon()
+}
+
+
+class HikariShardSource{
+getConnection()
+fetchConn()
+}
+
+
+
+
+class JDBCConnection{
+executeSql()
+outputResultSet()
+createStatement()
+}
+
+
+class ProxyStatement{
+execueQuery()
+}
+
+FrontEndCommandTask-->FrontendConnection
+FrontendConnection-->ServerQueryHandler
+ServerQueryHandler-->SelectHandler
+SelectHandler-->ServerConnection
+ServerConnection-->NonBlockingSession
+NonBlockingSession-->SingleNodeHandler
+PhysicalDBNode-->PhysicalDBPool
+PhysicalDBPool-->HikariShardSource
+SingleNodeHandler-->PhysicalDBNode
+SingleNodeHandler-->JDBCConnection
+HikariShardSource-->JDBCConnection
+HikariShardSource-->SingleNodeHandler
+JDBCConnection-->ProxyStatement
+ProxyStatement-->HikariShardSource
+JDBCConnection-->SingleNodeHandler
+
+
+
+@enduml

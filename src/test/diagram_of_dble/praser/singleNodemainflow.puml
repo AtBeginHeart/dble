@@ -1,0 +1,37 @@
+@startuml
+FrontEndCommandTask->FrontEndCommandTask:run()
+FrontEndCommandTask->FrontEndCommandTask:dowork()
+FrontEndCommandTask->FrontendConnection:query()
+FrontendConnection -> ServerQueryHandler:void query(String sql)
+ServerQueryHandler--> SelectHandler: handle(sql,connection,int offs)
+
+SelectHandler -> ServerConnection:execute(sql,type)
+ServerConnection -> ServerConnection:routeEndExecuteSQL(sql,type,schema)
+ServerConnection->NonBlockingSession:execute(RouteResultSet rrs)
+NonBlockingSession->SingleNodeHandler:void execute()
+SingleNodeHandler->PhysicalDBNode:getConnection(ResponseseHandler handler)
+PhysicalDBNode-->PhysicalDBPool:getRWBalanceCon(responhandler)
+PhysicalDBPool->HiKariShardSource:getConnection()
+HiKariShardSource->HiKariShardSource:fetchConn(responhandler)
+HiKariShardSource->JDBCconnection:execute()
+HiKariShardSource->SingleNodeHandler:connectionAcquired(final BackendConnection conn)
+SingleNodeHandler->BackendConnection:execute()
+BackendConnection->JDBCconnection:execute()
+JDBCconnection->JDBCconnection:executeSQL(responhandler)
+JDBCconnection->JDBCconnection:handleCache(ServerConnection c)
+JDBCconnection->JDBCconnection:outPutResultSet(ServerConnection c)
+JDBCconnection->JDBCconnection:createStatement()
+JDBCconnection->ProxyStatement:executeQuery()
+ProxyStatement->HiKariShardSource:executeQuery()
+JDBCconnection<--HiKariShardSource
+JDBCconnection->SingleNodeHandler:rowResponse()
+SingleNodeHandler-->JDBCconnection
+JDBCconnection-->SingleNodeHandler
+SingleNodeHandler-->NonBlockingSession
+NonBlockingSession-->ServerConnection
+ServerConnection-->ServerConnection
+ServerConnection-->showHandler
+showHandler-->ServerQueryHandler
+ServerQueryHandler-->FrontendConnection
+FrontendConnection-->FrontEndCommandTask
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+DbleStartup -> DbleStartup: ClusterController.init()
+DbleStartup -> DbleStartup: ZktoLocalMapMain.init()
+note left : 在线扩容只读表配合工具，监听并加载注册中心的只读表信息，向注册中心写当前节点加载是否成功note
+DbleStartup --> DbleServer: getInstance()
+activate DbleServer
+DbleServer --> DbleServer:beforeStart()
+DbleServer --> DtfClient:getInstance().startup();
+DtfClient --> DtfClient:startup()
+note left : 分布式数据库，启动前使用浦发银行自己封装的启动类进行配置一些系统参数
+DbleServer --> DbleServer:startup()
+activate DbleServer
+DbleServer --> DbleServer:backupLocked
+DbleServer --> DbleServer:managerConnectionFactory
+DbleServer --> DbleServer:serverConnectionFactory
+DbleServer --> DbleServer:SocketAcceptor manager
+DbleServer --> DbleServer:SocketAcceptor server
+DbleServer --> DbleServer:frontProcessors
+DbleServer --> DbleServer:backendProcessors
+DbleServer --> DbleServer:如果节点不为1
+DbleServer --> DbleServer:如果节点为多另外一种情况
+deactivate DbleServer
+
+@enduml
