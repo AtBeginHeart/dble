@@ -1,0 +1,47 @@
+@startuml
+
+FrontEndCommandTask --> FrontEndCommandTask:dowork()
+FrontEndCommandTask --> FrontendConnection:query()
+
+FrontendConnection --> FrontendConnection: query()
+FrontendConnection --> FrontendConnection: query()
+
+FrontendConnection --> FrontendConnection: query()
+FrontendConnection --> FrontendConnection: setExecuteSql(sql,isPrepared)
+
+FrontendConnection -->ServerQueryHandler:setReadOnly(Boolean readOnly)
+FrontendConnection -->ServerQueryHandler:setSessionReadOnly(Boolean readOnly)
+FrontendConnection -->ServerQueryHandler:query(sql)
+
+ServerQueryHandler-->SelectHandler:handle(sql)
+SelectHandler-->ServerConnection:execute(String sql,int type)
+
+ServerConnection-->ServerConnection:routeEndExecuteSQL(sql,type,schemaConfig)
+ServerConnection-->NonBlockingSession:endRoute(Route)
+ServerConnection-->NonBlockingSession:execute(Route)
+NonBlockingSession-->NonBlockingSession:execute(RouteResult rrs)//检查当前节点是否扩缩容
+NonBlockingSession-->NonBlockingSession:clearHandlesResources();
+NonBlockingSession-->SingleNodeHandler:execute()
+SingleNodeHandler-->PhysicalDBNode:getConnection()
+PhysicalDBNode-->PhysicalDBPool:getRWBanlanceConCon()
+PhysicalDBPool-->PhysicalDBPool: ShardSource getRWBanlanceNode()
+PhysicalDBPool-->HikariShardSource:getConnection()
+HikariShardSource-->HikariShardSource:fetchConn()
+HikariShardSource-->MultiNodeQueryHandler:connectionAcquired(final BackendConnection conn)
+MultiNodeQueryHandler-->NonBlockingSession:bindConnection()
+MultiNodeQueryHandler-->MultiNodeQueryHandler:innerExecute()
+MultiNodeQueryHandler-->JDBCConnection:setResponseHandler()
+MultiNodeQueryHandler-->JDBCConnection:setSession(session)
+MultiNodeQueryHandler-->JDBCConnection:execute(session)
+JDBCConnection-->JDBCConnection:executeSQL()
+JDBCConnection-->JDBCConnection:outputResultSet()
+JDBCConnection-->ProxyStatement:ResulSet executeQuery()
+JDBCConnection-->JDBCConnection:outputResultSet()
+JDBCConnection-->DtfContetAdapter:clean()
+HikariShardSource-->SingleNodeHandler:connectionAcquired(final BackendConnection conn)
+SingleNodeHandler-->NonBlockingSession:bindConnection()
+SingleNodeHandler-->SingleNodeHandler:execute()
+SingleNodeHandler-->JDBCConnection:executeSQL()
+JDBCConnection-->JDBCConnection:handleCache();
+JDBCConnection-->DtfContextAdapter:adapte()
+@enduml

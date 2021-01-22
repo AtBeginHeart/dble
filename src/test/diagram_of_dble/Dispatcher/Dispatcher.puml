@@ -1,0 +1,11 @@
+@startuml
+DbleServer-->NIOReactorPool:new()
+ NIOReactorPool -->NIOReactor:startup()
+ NIOReactor-->NIOsOCKETWR:execute(Set<SelectKey key>)
+ NIOSocketWR-->AbstractConnection:onReadData()
+ AbstractConnection-->FrontendConnection:handle()
+ FrontendConnection-->FrontendCommandDispatcher:handle()
+ FrontendCommandDispatcher-->FrontEndCommandTask:FrontEndCommandTask();//封装任务
+ FrontendCommandDispatcher-->DbleServer:getInstance().getBusinessExecutor.execute(task)//执行任务
+
+@enduml
