@@ -1,4 +1,7 @@
 @startuml
+
+class contoxt
+contoxt-->DbleStartup
 DbleStartup--> ClusterController:init()初始化集群信息到内存
 DbleStartup--> ZktoLocalMapMain:init() 初始化zk到本地映射初始化
 DbleStartup-->SystemConfig:getHomePath()获取系统配置
@@ -36,6 +39,7 @@ DbleServer-->DbleServer: 新建NIOReactorPool 后端响应端连接池
 DbleServer-->DbleServer: 新建NIOConnector 连接者并启动
 DbleServer-->DbleServer: 新建管理端NIOAcceptor
 DbleServer-->DbleServer: 新建服务端NIOAcceptor
+
 
 
 @enduml
